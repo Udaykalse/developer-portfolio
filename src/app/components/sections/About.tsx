@@ -5,7 +5,6 @@ import { portfolioData } from '@/app/data/portfolio-data';
 import { Mail, Phone, MapPin, Code, Palette, Zap, Search, ArrowRight } from 'lucide-react';
 
 const About = () => {
-  // Remove unused springTransition
   const smoothTransition = {
     duration: 0.6
   };
@@ -44,12 +43,13 @@ const About = () => {
     }
   };
 
+  // Fixed floatAnimation with proper typing
   const floatAnimation = {
     y: [-5, 5, -5],
     transition: {
       duration: 3,
       repeat: Infinity,
-      ease: "easeInOut"
+      ease: "easeInOut" as const
     }
   };
 
@@ -121,7 +121,7 @@ const About = () => {
           transition={{
             duration: 4,
             repeat: Infinity,
-            ease: "easeInOut"
+            ease: "easeInOut" as const
           }}
         />
         <motion.div
@@ -133,7 +133,7 @@ const About = () => {
           transition={{
             duration: 5,
             repeat: Infinity,
-            ease: "easeInOut",
+            ease: "easeInOut" as const,
             delay: 1
           }}
         />
@@ -146,7 +146,7 @@ const About = () => {
           transition={{
             duration: 6,
             repeat: Infinity,
-            ease: "easeInOut",
+            ease: "easeInOut" as const,
             delay: 2
           }}
         />
@@ -332,7 +332,7 @@ const About = () => {
                 transition={{
                   duration: 4,
                   repeat: Infinity,
-                  ease: "easeInOut"
+                  ease: "easeInOut" as const
                 }}
               />
               
