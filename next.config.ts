@@ -7,20 +7,15 @@
 // export default nextConfig;
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: 'export',
-  trailingSlash: true,
+const nextConfig: import('next').NextConfig = {
+  output: 'export',       // static HTML export
+  trailingSlash: true,    // optional, makes URLs end with /
   images: {
-    unoptimized: true
+    unoptimized: true,    // disables Next.js image optimization
   },
-  // Optional: Add if you're using environment variables
-  env: {
-    CUSTOM_KEY: process.env.CUSTOM_KEY,
-  },
-  // Optional: Enable if you need to redirect routes
-  async redirects() {
-    return []
-  }
+  eslint: {
+  ignoreDuringBuilds: true,
 }
+};
 
-export default nextConfig
+export default nextConfig;

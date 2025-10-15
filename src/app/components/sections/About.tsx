@@ -5,10 +5,13 @@ import { portfolioData } from '@/app/data/portfolio-data';
 import { Mail, Phone, MapPin, Code, Palette, Zap, Search, ArrowRight } from 'lucide-react';
 
 const About = () => {
-  const springTransition = {
-    type: "spring",
-    damping: 25,
-    stiffness: 200
+  // Remove unused springTransition
+  const smoothTransition = {
+    duration: 0.6
+  };
+
+  const quickTransition = {
+    duration: 0.3
   };
 
   const containerVariants = {
@@ -41,13 +44,12 @@ const About = () => {
     }
   };
 
-  const floatVariants = {
-    float: {
-      y: [-5, 5, -5],
-      transition: {
-        duration: 3,
-        repeat: Infinity
-      }
+  const floatAnimation = {
+    y: [-5, 5, -5],
+    transition: {
+      duration: 3,
+      repeat: Infinity,
+      ease: "easeInOut"
     }
   };
 
@@ -108,6 +110,7 @@ const About = () => {
 
   return (
     <section id="about" className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-white via-blue-50/20 to-indigo-50/30 relative overflow-hidden">
+      {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
           className="absolute top-10 left-10 w-4 h-4 bg-blue-400 rounded-full opacity-20"
@@ -117,7 +120,8 @@ const About = () => {
           }}
           transition={{
             duration: 4,
-            repeat: Infinity
+            repeat: Infinity,
+            ease: "easeInOut"
           }}
         />
         <motion.div
@@ -129,6 +133,7 @@ const About = () => {
           transition={{
             duration: 5,
             repeat: Infinity,
+            ease: "easeInOut",
             delay: 1
           }}
         />
@@ -141,23 +146,25 @@ const About = () => {
           transition={{
             duration: 6,
             repeat: Infinity,
+            ease: "easeInOut",
             delay: 2
           }}
         />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={smoothTransition}
           viewport={{ once: true }}
           className="text-center mb-12 sm:mb-16 lg:mb-20"
         >
           <motion.h2
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
+            transition={smoothTransition}
             viewport={{ once: true }}
             className="text-3xl sm:text-4xl lg:text-5xl font-bold text-secondary mb-4"
           >
@@ -166,14 +173,14 @@ const About = () => {
           <motion.div
             initial={{ width: 0 }}
             whileInView={{ width: "6rem" }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ ...smoothTransition, delay: 0.2 }}
             viewport={{ once: true }}
             className="w-24 h-1 bg-gradient-to-r from-primary to-blue-400 mx-auto mb-4 rounded-full"
           />
           <motion.p
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
+            transition={{ ...smoothTransition, delay: 0.3 }}
             viewport={{ once: true }}
             className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto"
           >
@@ -181,64 +188,69 @@ const About = () => {
           </motion.p>
         </motion.div>
         
+        {/* Main Content */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
+          transition={smoothTransition}
           className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-start"
         >
+          {/* Left Column - Personal Info */}
           <motion.div
             variants={itemVariants}
-            transition={{ duration: 0.6 }}
+            transition={smoothTransition}
             className="space-y-6 sm:space-y-8"
           >
+            {/* Greeting */}
             <motion.div
               variants={itemVariants}
-              transition={{ duration: 0.6 }}
+              transition={smoothTransition}
               whileHover={{ y: -5 }}
               className="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 relative overflow-hidden group"
             >
+              {/* Animated background */}
               <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               
               <h3 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-secondary mb-4 sm:mb-6 relative z-10">
-                Hello! I'm{" "}
+                Hello! I&apos;m{" "}
                 <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
                   {portfolioData.personal.name.split(' ')[0]}
                 </span>
               </h3>
               <motion.p
                 variants={itemVariants}
-                transition={{ duration: 0.6 }}
+                transition={smoothTransition}
                 className="text-gray-600 text-lg sm:text-xl leading-relaxed sm:leading-loose relative z-10"
               >
                 {portfolioData.personal.about}
               </motion.p>
             </motion.div>
 
+            {/* Contact Information */}
             <motion.div
               variants={itemVariants}
-              transition={{ duration: 0.6 }}
+              transition={smoothTransition}
               className="bg-gradient-to-br from-white to-gray-50 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-lg border border-gray-100"
             >
               <motion.h4
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3 }}
+                transition={quickTransition}
                 viewport={{ once: true }}
                 className="text-xl sm:text-2xl font-semibold text-secondary mb-6"
               >
                 Get In Touch
               </motion.h4>
               <div className="space-y-4">
-                {contactInfo.map((contact, index) => (
+                {contactInfo.map((contact) => (
                   <motion.a
                     key={contact.label}
                     href={contact.href}
                     initial={{ opacity: 0, x: -30 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                    transition={{ ...quickTransition, delay: 0.1 }}
                     viewport={{ once: true }}
                     whileHover={{ x: 5, scale: 1.02 }}
                     className="flex items-center space-x-4 p-4 rounded-xl hover:bg-white hover:shadow-md transition-all duration-200 group border border-transparent hover:border-gray-200"
@@ -263,30 +275,32 @@ const About = () => {
             </motion.div>
           </motion.div>
 
+          {/* Right Column - Services */}
           <motion.div
             variants={itemVariants}
-            transition={{ duration: 0.6 }}
+            transition={smoothTransition}
             className="space-y-6 sm:space-y-8"
           >
+            {/* Services Grid */}
             <motion.div
               variants={containerVariants}
-              transition={{ duration: 0.6 }}
+              transition={smoothTransition}
               className="grid sm:grid-cols-2 gap-4 sm:gap-6"
             >
-              {serviceItems.map((service, index) => (
+              {serviceItems.map((service) => (
                 <motion.div
                   key={service.title}
                   variants={cardVariants}
-                  transition={{ duration: 0.3 }}
+                  transition={quickTransition}
                   whileHover="hover"
                   className={`bg-gradient-to-br ${service.bgColor} rounded-2xl p-6 sm:p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 group relative overflow-hidden`}
                 >
+                  {/* Animated background on hover */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
                   
                   <div className="flex flex-col items-center text-center space-y-4 relative z-10">
                     <motion.div
-                      variants={floatVariants}
-                      animate="float"
+                      animate={floatAnimation}
                       className={`w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br ${service.color} rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg`}
                     >
                       <service.icon className="text-white w-6 h-6 sm:w-7 sm:h-7" />
@@ -302,12 +316,14 @@ const About = () => {
               ))}
             </motion.div>
 
+            {/* Skills Preview */}
             <motion.div
               variants={itemVariants}
-              transition={{ duration: 0.6 }}
+              transition={smoothTransition}
               whileHover={{ scale: 1.01 }}
               className="bg-gradient-to-br from-primary via-blue-600 to-purple-600 rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden"
             >
+              {/* Animated background */}
               <motion.div
                 className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"
                 animate={{
@@ -315,14 +331,15 @@ const About = () => {
                 }}
                 transition={{
                   duration: 4,
-                  repeat: Infinity
+                  repeat: Infinity,
+                  ease: "easeInOut"
                 }}
               />
               
               <motion.h4
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
+                transition={quickTransition}
                 viewport={{ once: true }}
                 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 relative z-10"
               >
@@ -330,12 +347,12 @@ const About = () => {
               </motion.h4>
               <div className="flex flex-wrap gap-2 sm:gap-3 relative z-10">
                 {portfolioData.skills.flatMap(category => 
-                  category.items.slice(0, 8).map((skill, index) => (
+                  category.items.slice(0, 8).map((skill) => (
                     <motion.span
                       key={skill.name}
                       initial={{ opacity: 0, scale: 0.8 }}
                       whileInView={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.3, delay: index * 0.1 }}
+                      transition={{ ...quickTransition, delay: 0.1 }}
                       viewport={{ once: true }}
                       whileHover={{ scale: 1.1, y: -2 }}
                       className="px-3 sm:px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium hover:bg-white/30 transition-all duration-200 cursor-default border border-white/10"
@@ -348,7 +365,7 @@ const About = () => {
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.8 }}
+                transition={{ ...quickTransition, delay: 0.8 }}
                 viewport={{ once: true }}
                 className="mt-6 pt-6 border-t border-white/20 relative z-10"
               >
@@ -360,31 +377,33 @@ const About = () => {
           </motion.div>
         </motion.div>
 
+        {/* Call to Action */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ ...smoothTransition, delay: 0.4 }}
           viewport={{ once: true }}
           className="text-center mt-12 sm:mt-16 lg:mt-20"
         >
           <motion.div
             whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.3 }}
+            transition={quickTransition}
             className="bg-gradient-to-br from-white to-blue-50 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-lg border border-gray-100 max-w-2xl mx-auto relative overflow-hidden"
           >
+            {/* Background animation */}
             <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-blue-600/5 opacity-0 hover:opacity-100 transition-opacity duration-300" />
             
             <h3 className="text-2xl sm:text-3xl font-semibold text-secondary mb-4 relative z-10">
-              Let's Build Something <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">Amazing</span> Together
+              Let&apos;s Build Something <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">Amazing</span> Together
             </h3>
             <p className="text-gray-600 text-lg sm:text-xl mb-6 relative z-10">
-              Ready to bring your ideas to life? I'm just one message away.
+              Ready to bring your ideas to life? I&apos;m just one message away.
             </p>
             <motion.a
               href="#contact"
               whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(59, 130, 246, 0.3)" }}
               whileTap={{ scale: 0.95 }}
-              transition={{ duration: 0.3 }}
+              transition={quickTransition}
               className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-primary to-blue-600 text-white rounded-xl font-semibold shadow-lg relative z-10 group overflow-hidden"
             >
               <span className="relative z-10">Start a Conversation</span>
