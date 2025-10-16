@@ -24,6 +24,7 @@ const Projects = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState<boolean>(false);
   const [isClient, setIsClient] = useState<boolean>(false);
+  const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
   const projectsPerPage = 9;
 
   useEffect(() => {
@@ -103,6 +104,10 @@ const Projects = () => {
     setCurrentPage(1);
   };
 
+  const handleImageError = (imageSrc: string) => {
+    setImageErrors(prev => new Set(prev).add(imageSrc));
+  };
+
   const projectCardVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
@@ -122,7 +127,7 @@ const Projects = () => {
   return (
     <section id="projects" className="py-20 bg-gradient-to-br from-gray-50 to-blue-50/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+        
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -215,7 +220,7 @@ const Projects = () => {
             </div>
           </div>
 
-          {/* Filters Panel - Fixed hydration issue */}
+          {/* Filters Panel */}
           {isClient && (
             <AnimatePresence>
               {(showFilters || window.innerWidth >= 1024) && (
@@ -315,78 +320,99 @@ const Projects = () => {
                 : 'space-y-6'
             }
           >
-            {currentProjects.map((project: Project, index: number) => (
-              <motion.div
-                key={`${project.title}-${index}`}
-                variants={projectCardVariants}
-                whileHover="hover"
-                className={`bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-500 group ${
-                  viewMode === 'list' ? 'flex flex-col md:flex-row' : ''
-                }`}
-              >
-                {/* Project Image */}
-                <div className={`relative overflow-hidden ${
-                  viewMode === 'list' ? 'md:w-64 md:flex-shrink-0' : 'h-48'
-                }`}>
-                  <div className="w-full h-full bg-gradient-to-br from-blue-500/10 to-purple-500/10 flex items-center justify-center">
-                    <span className="text-gray-400 text-sm">Project Image</span>
+            {currentProjects.map((project: Project, index: number) => {
+              const hasImageError = imageErrors.has(project.image);
+              
+              return (
+                <motion.div
+                  key={`${project.title}-${index}`}
+                  variants={projectCardVariants}
+                  whileHover="hover"
+                  className={`bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-500 group ${
+                    viewMode === 'list' ? 'flex flex-col md:flex-row' : ''
+                  }`}
+                >
+                  {/* Project Image - FIXED VERSION */}
+                  <div className={`relative overflow-hidden ${
+                    viewMode === 'list' ? 'md:w-64 md:flex-shrink-0' : 'h-48'
+                  }`}>
+                    {!hasImageError ? (
+                      <img 
+                        src={project.image} 
+                        alt={project.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        onError={() => handleImageError(project.image)}
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-blue-500/10 to-purple-500/10 flex items-center justify-center">
+                        <div className="text-center p-4">
+                          <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg">
+                            <span className="text-white text-xl font-bold">
+                              {project.title.charAt(0)}
+                            </span>
+                          </div>
+                          <span className="text-gray-600 text-sm font-medium">Project Preview</span>
+                        </div>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500" />
                   </div>
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500" />
-                </div>
 
-                {/* Project Content */}
-                <div className="p-6 flex-1">
-                  <div className="flex items-start justify-between mb-3">
-                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
-                      {project.title}
-                    </h3>
-                    <div className="flex items-center gap-1 text-sm text-gray-500">
-                      {project.date && (
-                        <span>{new Date(project.date).getFullYear()}</span>
+                  {/* Project Content */}
+                  <div className="p-6 flex-1">
+                    <div className="flex items-start justify-between mb-3">
+                      <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
+                        {project.title}
+                      </h3>
+                      <div className="flex items-center gap-1 text-sm text-gray-500">
+                        {project.date && (
+                          <span>{new Date(project.date).getFullYear()}</span>
+                        )}
+                      </div>
+                    </div>
+
+                    <p className="text-gray-600 mb-4 leading-relaxed">
+                      {project.description}
+                    </p>
+
+                    {/* Technologies */}
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {project.technologies.map((tech: string) => (
+                        <span
+                          key={tech}
+                          className="bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 px-3 py-1 rounded-full text-xs font-medium border border-blue-200/50"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex space-x-3">
+                      <Button
+                        href={project.github}
+                        variant="secondary"
+                        className="flex items-center space-x-2 text-sm px-4 py-2 rounded-xl"
+                      >
+                        <Github size={16} />
+                        <span>Code</span>
+                      </Button>
+                      {project.live && (
+                        <Button
+                          href={project.live}
+                          variant="primary"
+                          className="flex items-center space-x-2 text-sm px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                        >
+                          <ExternalLink size={16} />
+                          <span>Live Demo</span>
+                        </Button>
                       )}
                     </div>
                   </div>
-
-                  <p className="text-gray-600 mb-4 leading-relaxed">
-                    {project.description}
-                  </p>
-
-                  {/* Technologies */}
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {project.technologies.map((tech: string) => (
-                      <span
-                        key={tech}
-                        className="bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 px-3 py-1 rounded-full text-xs font-medium border border-blue-200/50"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex space-x-3">
-                    <Button
-                      href={project.github}
-                      variant="secondary"
-                      className="flex items-center space-x-2 text-sm px-4 py-2 rounded-xl"
-                    >
-                      <Github size={16} />
-                      <span>Code</span>
-                    </Button>
-                    {project.live && (
-                      <Button
-                        href={project.live}
-                        variant="primary"
-                        className="flex items-center space-x-2 text-sm px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                      >
-                        <ExternalLink size={16} />
-                        <span>Live Demo</span>
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              );
+            })}
           </motion.div>
         </AnimatePresence>
 
